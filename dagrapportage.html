@@ -18,10 +18,10 @@
 	<script type="text/javascript">
 		// controleer of de user wel toegang heeft
 		if( $.totalStorage('loggedin') != 1 ) {
-				$.totalStorage('loggedin',0);
-				$.totalStorage.deleteItem('user_id');
-				$.totalStorage.deleteItem('user_name');
-				window.location = 'index.html';
+			$.totalStorage('loggedin',0);
+			$.totalStorage.deleteItem('user_id');
+			$.totalStorage.deleteItem('user_name');
+			window.location = 'index.html';
 		}
 		// nu gaan we de clienten ophalen (moet ik nog een functie van maken...)
 		var WSurl = "http://localhost/Zapp2/ZAPP/src/webservice/getClients";
