@@ -1,4 +1,4 @@
 pgZAPP
 ======
 
-A better more stylish version of the ZAPP app, built with PhoneGap
+A different approach to the new ZilliZ ZAPP app, this time built with HTML/CSS/JS and using PhoneGap to deliver to devices.
