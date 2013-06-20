@@ -27,13 +27,12 @@
 		if ($.totalStorage('activeClient') == null) {
 			$.totalStorage('activeClient',0);
 		}
-		alert($.totalStorage('activeClient'));
-		// nu gaan we de clienten ophalen (moet ik nog een functie van maken...)
-		var WSurl = $.totalStorage('pathCFC') + "getClients";
+		// URL voor clienten
+		var WSClienturl = $.totalStorage('pathCFC') + "getClients";
 		// functie voor het ophalen van de clienten
 		function getClients(account_id,active_client) {
 			$.ajax({
-					url			: WSurl,
+					url			: WSClienturl,
 					type		: 'GET',
 					data		: { accountid: account_id },
 					contentType	: "application/json; charset=utf-8",
@@ -57,7 +56,7 @@
 												if (data[key]['clientid'] == $.totalStorage('activeClient')) {
 													liOpen = '<li class="menuActive">';
 													$('#title').html(data[key]['clientnameinformal'] + ' - Dagrapportage');
-													getDailyReports();
+													getDailyReports($.totalStorage('activeClient'));
 												}
 												strClienten += liOpen + '<a href="#" onClick="getClients(' + $.totalStorage('account_id') + ',' + data[key]['clientid'] + ')">' + data[key]['clientnameinformal'] + '</a></li>';
 											}
@@ -71,11 +70,52 @@
 								}
 			});
 		}
+		// URL voor dagrapportages
+		var WSReportsurl = $.totalStorage('pathCFC') + "getDailyReports";
 		// functie voor het ophalen van de dagrapportages
+		function getDailyReports(clientid) {
+			$.ajax({
+					url			: WSReportsurl,
+					type		: 'GET',
+					data		: { clientid: clientid },
+					contentType	: "application/json; charset=utf-8",
+				    dataType	: "JSON",
+					statusCode	: {
+									200: function(data) {
+										if (data == '[]' || data == []) {
+											alert("fout200");
+										}
+										else {
+											var strReports = '';
+											if (data.length == 0) {
+												strReports += 'Er zijn geen dagrapportages beschikbaar';
+											} else {
+												strReports = '<div class="ui-grid-b">';
+													for (var key=0, size=data.length; key<size;key++) {
+													strReports += '<div class="ui-block-a">xxx</div>';
+												}
+												strReports += '</div>';
+											};
+											//$('#content').html(strReports);
+										};
 
+									},
+									202: function(err) {
+										alert("fout202");
+									}
+								}
+			});
+		}
 		// haal de clienten op voor de eerste keer
 		getClients($.totalStorage('account_id'),$.totalStorage('activeClient'));
 	/*]]>*/</script>
+
+<script>
+	function myFunction()
+{
+alert("Hello World!");
+}
+</script>
 </head>
 <body>
 <div data-role="page" id="page">
@@ -85,11 +125,25 @@
 		<a href="#open-menu" data-rel="close" data-role="button" data-theme="b" data-icon="delete" data-inline="true">sluit</a>
 	</div>
 	<div data-role="header" data-theme="b">
-		<a href="#mypanel" id="open-menu" data-icon="arrow-r">menu</a>
+		<a href="#mypanel" id="open-menu" data-icon="arrow-r" onclick="changePanelArrow()">menu</a>
 		<h1 id="title">Dagrapportage</h1>
 	</div>
 	<div data-role="content" id="content" data-inset="true">
-		Data wordt opgehaald...
+
+
+		<ul data-role="listview" data-inset="false">
+			<li>
+
+				<h3>jQuery Team</h3>
+				<p><strong>Boston Conference Planning</strong></p>
+				<p>In preparation for the upcoming conference in Boston, we need to start gathering a list of sponsors and speakers.</p>
+				<p class="ui-li-aside"><strong>9:18</strong>AM</p>
+
+			</li>
+		</ul>
+
+
+
 	</div>
 </div>
 </body>
