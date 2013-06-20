@@ -24,8 +24,7 @@
 	        cache: false,
 	        dataType: "JSON",
 	        success: function( data, textStatus, jqXHR ) {
-	            $.localSettings = JSON.stringify(data);
-	            alert($.localSettings);
+				$.totalStorage('pathCFC',data.pathCFC);
 	        }
 	    });
 		// verstop (voorlopig) de errorBox
@@ -53,7 +52,7 @@
 		// alles goed, dan gaan we de webservice aanroepen
 		submitHandler: function(form) {
 
-			  var WSurl = "http://localhost/ZAPP/src/webservice/getCredentials";
+			  var WSurl = $.totalStorage('pathCFC') + "getCredentials";
 			  var formData = $('#loginForm').serialize();
 			   $.ajax(
 			    {
@@ -64,7 +63,7 @@
 			        dataType	: "JSON",
 			        statusCode  : {
 			        				200: function(data) {
-			        					if (data == '[]') {
+			        					if (data == '') {
 			        						$('#errorBox').html('ongeldige inloggegevens');
 			        						$('#errorBox').show();
 			        					}
