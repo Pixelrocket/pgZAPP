@@ -18,3 +18,5 @@ label.error {
 	font-weight:normal;
 	margin-bottom: 20px;
 }
+
+.menuActive { font-weight: bold;}

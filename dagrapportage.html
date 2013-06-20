@@ -18,42 +18,70 @@
 	<script type="text/javascript">/*<![CDATA[*/
 		// controleer of de user wel toegang heeft
 		if( $.totalStorage('loggedin') != 1 ) {
-			alert("fout");
 			$.totalStorage('loggedin',0);
 			$.totalStorage.deleteItem('user_id');
 			$.totalStorage.deleteItem('user_name');
 			window.location = 'index.html';
 		}
+		// check of totalStorage.activeClient wel bestaat... Zo nee, dan zetten.
+		if ($.totalStorage('activeClient') == null) {
+			$.totalStorage('activeClient',0);
+		}
+		alert($.totalStorage('activeClient'));
 		// nu gaan we de clienten ophalen (moet ik nog een functie van maken...)
-		/*var WSurl = "http://localhost.railo/ZAPP/src/webservice/zapp.cfc?method=getClients";*/
-		var WSurl = "http://localhost/Zapp2/ZAPP/src/webservice/getClients";
-		alert('accountId uit totalStorage : '+$.totalStorage('account_id'));
-		$.ajax({
-				url			: WSurl/*+"account_id="+$.totalStorage('account_id'),*/
-				type		: 'GET',
-				data		: { accountid: $.totalStorage('account_id') },
-				contentType	: "application/json; charset=utf-8",
-				dataType	: "json",
-				statusCode	: {
-								200: function(data) {
-									if (data == '[]') {
-										alert("fout200");
+		var WSurl = $.totalStorage('pathCFC') + "getClients";
+		// functie voor het ophalen van de clienten
+		function getClients(account_id,active_client) {
+			$.ajax({
+					url			: WSurl,
+					type		: 'GET',
+					data		: { accountid: account_id },
+					contentType	: "application/json; charset=utf-8",
+				    dataType	: "JSON",
+					statusCode	: {
+									200: function(data) {
+										if (data == '[]' || data == []) {
+											alert("fout200");
+										}
+										else {
+											/* kijk of er wel een client is gekozen. Zo ja, zet TotalStorage,
+											 zo nee, zet 'm op de eerste en dan in TotalStorage*/
+											if (active_client == 0) {
+												$.totalStorage('activeClient',data[0]['clientid']);
+											} else {
+												$.totalStorage('activeClient',active_client);
+											}
+											var strClienten = '';
+											for (var key=0, size=data.length; key<size;key++) {
+												var liOpen = '<li>';
+												if (data[key]['clientid'] == $.totalStorage('activeClient')) {
+													liOpen = '<li class="menuActive">';
+													$('#title').html(data[key]['clientnameinformal'] + ' - Dagrapportage');
+													getDailyReports();
+												}
+												strClienten += liOpen + '<a href="#" onClick="getClients(' + $.totalStorage('account_id') + ',' + data[key]['clientid'] + ')">' + data[key]['clientnameinformal'] + '</a></li>';
+											}
+											$('#clientlist').html(strClienten);
+										};
+
+									},
+									202: function(err) {
+										alert("fout202");
 									}
-									else {
-										alert(data);
-									};
-								},
-								202: function(err) {
-									alert("fout202");
 								}
-							}
-		});
+			});
+		}
+		// functie voor het ophalen van de dagrapportages
+
+		// haal de clienten op voor de eerste keer
+		getClients($.totalStorage('account_id'),$.totalStorage('activeClient'));
 	/*]]>*/</script>
 </head>
 <body>
 <div data-role="page" id="page">
 	<div data-role="panel" id="mypanel" data-position="left" data-display="push" data-position-fixed="true" data-dismissible="true" data-theme="b">
-		<p>inhoud</p>
+		<ul id="clientlist">
+		</ul>
 		<a href="#open-menu" data-rel="close" data-role="button" data-theme="b" data-icon="delete" data-inline="true">sluit</a>
 	</div>
 	<div data-role="header" data-theme="b">
@@ -61,7 +89,7 @@
 		<h1 id="title">Dagrapportage</h1>
 	</div>
 	<div data-role="content" id="content" data-inset="true">
-		xxx
+		Data wordt opgehaald...
 	</div>
 </div>
 </body>
