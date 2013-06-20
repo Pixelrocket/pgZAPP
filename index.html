@@ -1,120 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="robots" content="noindex, follow">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ZAPP - Inloggen</title>
-    <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.3.1.min.css">
+	<meta charset="utf-8">
+	<meta name="robots" content="noindex, follow">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ZAPP - Inloggen</title>
+	<link rel="stylesheet" href="css/themes/default/jquery.mobile-1.3.1.min.css">
 	<link rel="stylesheet" href="css/custom.css">
 	<link rel="stylesheet" href="css/jquery.mobile.simpledialog.min.css">
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-    <script src="js/jquery.js"></script>
-    <script src="js/jquery.mobile-1.3.1.min.js"></script>
+	<link rel="shortcut icon" href="favicon.ico">
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<script src="js/jquery.js"></script>
+	<script src="js/jquery.mobile-1.3.1.min.js"></script>
 	<script src="js/jquery.mobile.simpledialog2.min.js"></script>
 	<script src="js/jquery.validate.js"></script>
 	<script src="js/jquery.total-storage.min.js"></script>
-<script type="text/javascript">
-  $(document).on('pageinit', function() {
-	// verstop (voorlopig) de errorBox
-  	$('#errorBox').hide();
-  	// nu gaan we de gegevens valideren
-  	var validator = $("#loginForm").validate({
-	rules: {
-		frmUsername: "required",
-		frmPassword: "required",
-		username: {
-			required: true,
-			minlength: 5,
-			maxlength: 40
-		},
-		password: {
-			required: true,
-			minlength: 5,
-			maxlength: 40
-		}
-	},
-	messages: {
-		frmUsername: "Voer uw gebruikersnaam in",
-		frmPassword: "Voer uw wachtwoord in"
-	},
-	// alles goed, dan gaan we de webservice aanroepen
-	submitHandler: function(form) {
-
-		  var WSurl = "http://localhost/Zapp2/ZAPP/src/webservice/getCredentials";
-		  var formData = $('#loginForm').serialize();
-		   $.ajax(
-		    {
-		        url			: WSurl,
-		        type		: 'GET',
-		        data		: formData,
-		        contentType	: "application/json; charset=utf-8",
-		        dataType	: "text",
-		        statusCode  : {
-		        				200: function(data) {
-		        					if (data == '[]') {
-		        						$('#errorBox').html('ongeldige inloggegevens');
-		        						$('#errorBox').show();
-		        					}
-		        					else {
-		        						var jsonArray = JSON.parse(data);
-		        						$.each(jsonArray, function() {
-						                        $.totalStorage('loggedin',1);
-						                        $.totalStorage('account_id',this['accountid']);
-				        						$.totalStorage('user_id',this['userid']);
-				        						$.totalStorage('user_name',this['firstname'] + ' ' + this['infix'] + ' ' + this['lastname']);
-						                  });
-										window.location = 'dagrapportage.html';
-		        					};
-								},
-		        				202: function(err) {
-		        					$('#errorBox').html('verbinding niet mogelijk');
-		        					$('#errorBox').show();
-		        				}
-		        }
-		    }
-		);
-	}
-  	});
-	});
-</script>
+	<script type="text/javascript">/*<![CDATA[*/
+		$(document).on('pageinit', function() {
+			// verstop (voorlopig) de errorBox
+			$('#errorBox').hide();
+			// nu gaan we de gegevens valideren
+			var validator = $("#loginForm").validate({
+				rules: {
+					frmUsername: "required",
+					frmPassword: "required",
+					username: {
+						required: true,
+						minlength: 5,
+						maxlength: 40
+					},
+					password: {
+						required: true,
+						minlength: 5,
+						maxlength: 40
+					}
+				},
+				messages: {
+					frmUsername: "Voer uw gebruikersnaam in",
+					frmPassword: "Voer uw wachtwoord in"
+				},
+				// alles goed, dan gaan we de webservice aanroepen
+				submitHandler: function(form) {
+					/*var WSurl = "http://localhost.railo/ZAPP/src/webservice/zapp.cfc?method=getCredentials";*/
+					var WSurl = "http://localhost/Zapp2/ZAPP/src/webservice/getCredentials";
+					var formData = $('#loginForm').serialize();
+					$.ajax({
+							url			: WSurl/*+"&username="+formData.frmUsername+"&password="+formData.frmPassword,*/
+							type		: 'GET',
+							data		: formData,
+							contentType	: "application/json; charset=utf-8",
+							dataType	: "json",
+							statusCode	:	{
+												200: function(data) {
+													if (data == '[]'/* || data == '["access denied"]'*/) {
+														$('#errorBox').html('ongeldige inloggegevens');
+														$('#errorBox').show();
+													}
+													else {
+														alert(JSON.stringify(data,null,4));
+														var jsonArray = JSON.parse(data);
+														$.each(jsonArray,function() {
+															$.totalStorage('loggedin',1);
+															$.totalStorage('account_id',this['accountid']);
+															$.totalStorage('user_id',this['userid']);
+															$.totalStorage('user_name',this['firstname'] + ' ' + this['infix'] + ' ' + this['lastname']);
+														});
+														window.location = 'dagrapportage.html';
+													};
+												},
+												202: function(err) {
+													$('#errorBox').html('verbinding niet mogelijk');
+													$('#errorBox').show();
+												}
+											}
+								}
+					);
+				}
+			});
+		});
+	/*]]>*/</script>
 </head>
 <body>
-
-    <div data-role="page" id="page">
-
-        <div data-role="header" data-theme="b">
-            <h1 id="title">Welkom bij ZilliZ</h1>
-        </div>
-
-        <div data-role="content" id="content" data-inset="true">
-
-			<h3>Inloggen</h3>
-			<form method="post" id="loginForm">
-			<fieldset>
-				<p>
-					Van harte welkom bij ZilliZ. Om in te loggen moet u over geldige inloggegevens beschikken.
-					U kunt uw eigen inloggegevens gebruiken.
-				</p>
-				<div id="errorBox"></div>
-				<div class="wrap">
-					<label for="frmUsername">Gebruikersnaam:</label>
-					<input type="text" name="frmUsername" id="frmUsername" value="hilhorst" onfocus="this.value='';this.onfocus=null;" />
-				</div>
-				<div class="wrap">
-					<label for="frmPassword">Wachtwoord:</label>
-					<input type="password" name="frmPassword" id="frmPassword" value="171049" onfocus="this.value='';this.onfocus=null;" />
-				</div>
-				<div class="wrap">
-					<input id="submit" type="submit" value="inloggen" data-role="button" data-inline="true" data-theme="b" />
-				</div>
-			</fieldset>
-			</form>
-
-        </div>
-
-    </div>
-
+<div data-role="page" id="page">
+	<div data-role="header" data-theme="b">
+		<h1 id="title">Welkom bij ZilliZ</h1>
+	</div>
+	<div data-role="content" id="content" data-inset="true">
+		<h3>Inloggen</h3>
+		<form method="post" id="loginForm">
+		<fieldset>
+			<p>
+				Van harte welkom bij ZilliZ. Om in te loggen moet u over geldige inloggegevens beschikken.
+				U kunt uw eigen inloggegevens gebruiken.
+			</p>
+			<div id="errorBox"></div>
+			<div class="wrap">
+				<label for="frmUsername">Gebruikersnaam:</label>
+				<input type="text" name="frmUsername" id="frmUsername" value="hilhorst" onfocus="this.value='';this.onfocus=null;" />
+			</div>
+			<div class="wrap">
+				<label for="frmPassword">Wachtwoord:</label>
+				<input type="password" name="frmPassword" id="frmPassword" value="171049" onfocus="this.value='';this.onfocus=null;" />
+			</div>
+			<div class="wrap">
+				<input id="submit" type="submit" value="inloggen" data-role="button" data-inline="true" data-theme="b" />
+			</div>
+		</fieldset>
+		</form>
+	</div>
+</div>
 </body>
 </html>
