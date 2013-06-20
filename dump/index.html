@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZAPP - Welkom</title>
+    <link rel="stylesheet"  href="css/themes/default/jquery.mobile-1.3.1.min.css">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.mobile-1.3.1.min.js"></script>
+	<script>
+		$(document).on('pageinit', "#page", function() {
+			loadHeader("login");
+		    loadContent("login");
+		    //loadMenu("default");
+		});
+		function loadHeader(name) {
+		    $("#title").html('Welkom bij ZilliZ');
+		}
+		function loadContent(location) {
+		    return $('#content').load("view/"+location+".html", function() {
+		        $(this).trigger('create');
+		    });
+		}
+	</script>
+</head>
+<body>
+
+    <div data-role="page" id="page">
+
+        <div data-role="header">
+            <h1 id="title">Title</h1>
+        </div>
+
+        <div data-role="content" id="content">
+            <p>Loading...</p>
+        </div>
+
+        <div data-role="footer" id="footer" data-position="fixed">
+            <div data-role="navbar" id="navbar">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

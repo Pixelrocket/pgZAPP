@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZAPP - Dagrapportage</title>
+    <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.3.1.min.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<link rel="stylesheet" href="css/jquery.mobile.simpledialog.min.css">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.mobile-1.3.1.min.js"></script>
+	<script src="js/jquery.mobile.simpledialog2.min.js"></script>
+	<script src="js/jquery.validate.js"></script>
+	<script src="js/jquery.total-storage.min.js"></script>
+	<script type="text/javascript">
+		// controleer of de user wel toegang heeft
+		if( $.totalStorage('loggedin') != 1 ) {
+				$.totalStorage('loggedin',0);
+				$.totalStorage.deleteItem('user_id');
+				$.totalStorage.deleteItem('user_name');
+				window.location = 'index.html';
+		}
+		// nu gaan we de clienten ophalen (moet ik nog een functie van maken...)
+		var WSurl = "http://localhost/Zapp2/ZAPP/src/webservice/getClients";
+
+$.ajax(
+{
+url			: WSurl,
+type		: 'GET',
+data		: { accountid: $.totalStorage('account_id') },
+contentType	: "application/json; charset=utf-8",
+dataType	: "text",
+statusCode  : {
+200: function(data) {
+if (data == '[]') {
+	alert("fout200");
+}
+else {
+	//alert(data);
+};
+},
+202: function(err) {
+	alert("fout202");
+}
+}
+}
+);
+</script>
+
+</head>
+<body>
+
+    <div data-role="page" id="page">
+
+		<div data-role="panel" id="mypanel" data-position="left" data-display="push" data-position-fixed="true" data-dismissible="true" data-theme="b">
+            <p>inhoud</p>
+            <a href="#open-menu" data-rel="close" data-role="button" data-theme="b" data-icon="delete" data-inline="true">sluit</a>
+		</div>
+
+        <div data-role="header" data-theme="b">
+			<a href="#mypanel" id="open-menu" data-icon="arrow-r">menu</a>
+            <h1 id="title">Dagrapportage</h1>
+        </div>
+
+        <div data-role="content" id="content" data-inset="true">
+
+			xxx
+
+        </div>
+
+    </div>
+
+</body>
+</html>
