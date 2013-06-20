@@ -41,18 +41,18 @@
 				},
 				// alles goed, dan gaan we de webservice aanroepen
 				submitHandler: function(form) {
-					/*var WSurl = "http://localhost.railo/ZAPP/src/webservice/zapp.cfc?method=getCredentials";*/
-					var WSurl = "http://localhost/Zapp2/ZAPP/src/webservice/getCredentials";
+					var WSurl = "http://localhost.railo/ZAPP/src/webservice/zapp.cfc?method=getCredentials";
+					//var WSurl = "http://localhost/Zapp2/ZAPP/src/webservice/getCredentials";
 					var formData = $('#loginForm').serialize();
 					$.ajax({
-							url			: WSurl/*+"&username="+formData.frmUsername+"&password="+formData.frmPassword,*/
+							url			: WSurl+"&username="+formData.frmUsername+"&password="+formData.frmPassword,
 							type		: 'GET',
 							data		: formData,
 							contentType	: "application/json; charset=utf-8",
 							dataType	: "json",
 							statusCode	:	{
 												200: function(data) {
-													if (data == '[]'/* || data == '["access denied"]'*/) {
+													if (data == '[]' || data == '["access denied"]') {
 														$('#errorBox').html('ongeldige inloggegevens');
 														$('#errorBox').show();
 													}
