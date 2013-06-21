@@ -16,6 +16,10 @@
 	<script src="js/jquery.validate.js"></script>
 	<script src="js/jquery.total-storage.min.js"></script>
 	<script type="text/javascript">/*<![CDATA[*/
+		// URL voor clienten
+		var WSClienturl = $.totalStorage('pathCFC') + "getClients";
+		// URL voor dagrapportages
+		var WSReportsurl = $.totalStorage('pathCFC') + "getDailyReports";
 		// controleer of de user wel toegang heeft
 		if( $.totalStorage('loggedin') != 1 ) {
 			$.totalStorage('loggedin',0);
@@ -27,10 +31,8 @@
 		if ($.totalStorage('activeClient') == null) {
 			$.totalStorage('activeClient',0);
 		}
-		// URL voor clienten
-		var WSClienturl = $.totalStorage('pathCFC') + "getClients";
-		// URL voor dagrapportages
-		var WSReportsurl = $.totalStorage('pathCFC') + "getDailyReports";
+		// haal de clienten op voor de eerste keer
+		getClients($.totalStorage('account_id'),$.totalStorage('activeClient'));
 		// functie voor het ophalen van de clienten
 		function getClients(account_id,active_client) {
 			$.ajax({
@@ -116,8 +118,6 @@
 								}
 			});
 		}
-		// haal de clienten op voor de eerste keer
-		getClients($.totalStorage('account_id'),$.totalStorage('activeClient'));
 		function changePanelArrow() {
 			if($('#open-menu').attr('data-icon') == 'arrow-r') {
 				$('#open-menu').attr('data-icon','arrow-l');
@@ -137,7 +137,7 @@
 		<a href="#open-menu" data-rel="close" data-role="button" data-theme="b" data-icon="delete" data-inline="true" onclick="changePanelArrow();">sluit</a>
 	</div>
 	<div data-role="header" data-theme="b">
-		<a href="#mypanel" id="open-menu" data-icon="arrow-r" onclick="changePanelArrow();">menu</a>
+		<a href="#mypanel" id="open-menu" data-role="button" data-icon="arrow-r" onclick="changePanelArrow();">menu</a>
 		<h1 id="title">Dagrapportage</h1>
 	</div>
 	<div data-role="content" id="content" data-inset="true">
