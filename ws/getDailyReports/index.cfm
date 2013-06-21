@@ -1,6 +1,6 @@
 <cfcontent type="application/json" /><cfsilent>
-<cfset variables.clientid = "7" />
+<cfparam name="url.clientid" default="7" />
 <cfinvoke component="../zapp" method="getDailyReports" returnvariable="dailyreports">
-	<cfinvokeargument name="clientid" value="#variables.clientid#" />
+	<cfinvokeargument name="clientid" value="#url.clientid#" />
 </cfinvoke>
 </cfsilent><cfoutput>#dailyreports#</cfoutput>
