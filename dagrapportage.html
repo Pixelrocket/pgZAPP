@@ -45,23 +45,31 @@
 											alert("fout200");
 										}
 										else {
-											/* kijk of er wel een client is gekozen. Zo ja, zet TotalStorage,
-											 zo nee, zet 'm op de eerste en dan in TotalStorage*/
-											if (active_client == 0) {
-												$.totalStorage('activeClient',data[0]['clientid']);
-											} else {
-												$.totalStorage('activeClient',active_client);
-											}
 											var strClienten = '';
-											for (var key=0, size=data.length; key<size;key++) {
-												var liOpen = '<li>';
-												if (data[key]['clientid'] == $.totalStorage('activeClient')) {
-													liOpen = '<li class="menuActive">';
-													$('#title').html(data[key]['clientnameinformal'] + ' - Dagrapportage');
-													getDailyReports($.totalStorage('activeClient'));
+											// als geen actieve client en geen data, toon dan melding in menu
+											if (active_client == 0 && typeof data.length == 'undefined') {
+												strClienten += '<li>Geen cli&euml;nten beschikbaar</li>';
+												getDailyReports($.totalStorage('activeClient'));
+											} else {
+												// als geen actieve client, maar wel clienten beschikbaar, zet dan actieve client op eerste beschikbare
+												if (active_client == 0 && data.length) {
+													$.totalStorage('activeClient',data[0]['clientid']);
+												// anders zet gekozen actieve client
+												} else {
+													$.totalStorage('activeClient',active_client);
 												}
-												strClienten += liOpen + '<a href="#" onClick="getClients(' + $.totalStorage('account_id') + ',' + data[key]['clientid'] + ')">' + data[key]['clientnameinformal'] + '</a></li>';
+												// loop over beschikbare clienten en bouw lijst op
+												for (var key=0, size=data.length; key<size; key++) {
+													var liOpen = '<li>';
+													if (data[key]['clientid'] == $.totalStorage('activeClient')) {
+														liOpen = '<li class="menuActive">';
+														$('#title').html(data[key]['clientnameinformal'] + ' - Dagrapportage');
+														getDailyReports($.totalStorage('activeClient'));
+													}
+													strClienten += liOpen + '<a href="#" onClick="getClients(' + $.totalStorage('account_id') + ',' + data[key]['clientid'] + ')">' + data[key]['clientnameinformal'] + '</a></li>';
+												}
 											}
+											// vul menu met lijst beschikbare clienten
 											$('#clientlist').html(strClienten);
 										};
 									},
@@ -86,15 +94,19 @@
 										}
 										else {
 											var strReports = '';
-											if (data.length == 0) {
-												strReports += 'Er zijn geen dagrapportages beschikbaar';
+											if(typeof data.length == 'undefined') {
+												strReports += 'Geen cli&euml;nten beschikbaar, dus ook geen dagrapportages.'
 											} else {
-												strReports = '<ul data-role="listview" data-inset="false">';
-													for (var key=0, size=data.length; key<size;key++) {
-													strReports += '<li><h3>Dagrapportage titel</h3><h4>Subtitel</h4><p>Hier komt de lange tekst, of korte tekst, van de dagrapportage zelf. Zoals al gezegd kan deze een paar regels bevatten, een epos lang zijn of enkel een paar woorden bevatten. Al met al moet het wel hierin passen.</p><p class="ui-li-aside"><strong>15-11-2012<br/>09:18 uur</strong></p></li>';
-												}
-												strReports += '</div>';
-											};
+												if (data.length == 0) {
+													strReports += 'Er zijn geen dagrapportages beschikbaar';
+												} else {
+													strReports = '<ul data-role="listview" data-inset="false">';
+														for (var key=0, size=data.length; key<size;key++) {
+														strReports += '<li><h3>Dagrapportage titel</h3><h4>Subtitel</h4><p>Hier komt de lange tekst, of korte tekst, van de dagrapportage zelf. Zoals al gezegd kan deze een paar regels bevatten, een epos lang zijn of enkel een paar woorden bevatten. Al met al moet het wel hierin passen.</p><p class="ui-li-aside"><strong>15-11-2012<br/>09:18 uur</strong></p></li>';
+													}
+													strReports += '</div>';
+												};
+											}
 											$('#content').html(strReports);
 										};
 									},

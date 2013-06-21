@@ -1,22 +1,5 @@
-label.error { 
-	float: left;
-	color: red; 
-	padding-top: .5em; 
-	vertical-align: top; 
-	font-weight:normal;
-}
-
-.wrap {
-	clear: both;
-}
-
-#errorBox { 
-	float: left;
-	color: red; 
-	padding-top: .5em; 
-	vertical-align: top; 
-	font-weight:normal;
-	margin-bottom: 20px;
-}
-
-.menuActive { font-weight: bold;}
+.wrap { clear:both; }
+#errorBox, label.error { color:#f00; float:left; font-weight:normal; padding-top:.5em; vertical-align:top; }
+#errorBox { margin-bottom:20px; }
+#clientlist { list-style-type:none; padding-left:0 ! important; }
+.menuActive { font-weight:bold;}
