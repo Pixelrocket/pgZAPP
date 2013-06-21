@@ -16,23 +16,6 @@
 	<script src="js/jquery.validate.js"></script>
 	<script src="js/jquery.total-storage.min.js"></script>
 	<script type="text/javascript">/*<![CDATA[*/
-		// URL voor clienten
-		var WSClienturl = $.totalStorage('pathCFC') + "getClients";
-		// URL voor dagrapportages
-		var WSReportsurl = $.totalStorage('pathCFC') + "getDailyReports";
-		// controleer of de user wel toegang heeft
-		if( $.totalStorage('loggedin') != 1 ) {
-			$.totalStorage('loggedin',0);
-			$.totalStorage.deleteItem('user_id');
-			$.totalStorage.deleteItem('user_name');
-			window.location = 'index.html';
-		}
-		// check of totalStorage.activeClient wel bestaat... Zo nee, dan zetten.
-		if ($.totalStorage('activeClient') == null) {
-			$.totalStorage('activeClient',0);
-		}
-		// haal de clienten op voor de eerste keer
-		getClients($.totalStorage('account_id'),$.totalStorage('activeClient'));
 		// functie voor het ophalen van de clienten
 		function getClients(account_id,active_client) {
 			$.ajax({
@@ -127,6 +110,29 @@
 				$('#open-menu').find('.ui-icon').addClass('ui-icon-arrow-r').removeClass('ui-icon-arrow-l');
 			}
 		}
+		function checkAccess(actie) {
+			/*	actie: controleer of de user wel toegang heeft
+			of
+				actie: uitloggen */
+			if( $.totalStorage('loggedin') != 1 || actie == 1) {
+				$.totalStorage('loggedin',0);
+				$.totalStorage.deleteItem('user_id');
+				$.totalStorage.deleteItem('user_name');
+				window.location = 'index.html';
+			}
+		}
+		// controleer of de user wel toegang heeft
+		checkAccess();
+		// URL voor clienten
+		var WSClienturl = $.totalStorage('pathCFC') + "getClients";
+		// URL voor dagrapportages
+		var WSReportsurl = $.totalStorage('pathCFC') + "getDailyReports";
+		// check of totalStorage.activeClient wel bestaat... Zo nee, dan zetten.
+		if ($.totalStorage('activeClient') == null) {
+			$.totalStorage('activeClient',0);
+		}
+		// haal de clienten op voor de eerste keer
+		getClients($.totalStorage('account_id'),$.totalStorage('activeClient'));
 	/*]]>*/</script>
 </head>
 <body>
@@ -134,7 +140,8 @@
 	<div data-role="panel" id="mypanel" data-position="left" data-display="push" data-position-fixed="true" data-dismissible="true" data-theme="b">
 		<ul id="clientlist">
 		</ul>
-		<a href="#open-menu" data-rel="close" data-role="button" data-theme="b" data-icon="delete" data-inline="true" onclick="changePanelArrow();">sluit</a>
+		<a href="#open-menu" data-rel="close" data-role="button" data-theme="b" data-icon="arrow-r" data-inline="true" onclick="changePanelArrow();">sluit menu</a>
+		<a href="#" data-role="button" data-theme="b" data-icon="delete" data-inline="true" onclick="checkAccess(1);">uitloggen</a>
 	</div>
 	<div data-role="header" data-theme="b">
 		<a href="#mypanel" id="open-menu" data-role="button" data-icon="arrow-r" onclick="changePanelArrow();">menu</a>
