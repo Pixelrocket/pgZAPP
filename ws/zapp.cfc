@@ -163,7 +163,8 @@
 				queryConvertedToArray[i]["cdo_subject"] = qrySelect.cdo_subject[i];
 				queryConvertedToArray[i]["cdo_dossier"] = qrySelect.cdo_dossier[i];
 				queryConvertedToArray[i]["cdo_intranet"] = qrySelect.cdo_intranet[i];
-				queryConvertedToArray[i]["cdo_date_added"] = qrySelect.cdo_date_added[i];
+				queryConvertedToArray[i]["cdo_date_added"] = DateFormat(qrySelect.cdo_date_added[i],"dd-mm-yyyy");
+				queryConvertedToArray[i]["cdo_time_added"] = TimeFormat(qrySelect.cdo_date_added[i],"HH:mm:ss");
 			}
 		</cfscript>
 		<cfreturn serializejson(queryConvertedToArray) />
